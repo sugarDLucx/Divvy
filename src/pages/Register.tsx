@@ -8,6 +8,7 @@ export const Register: React.FC = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     // const [currency, setCurrency] = useState('USD'); // Future feature
 
     const [error, setError] = useState('');
@@ -17,6 +18,12 @@ export const Register: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+
+        if (password !== confirmPassword) {
+            setError("Passwords do not match.");
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -103,11 +110,22 @@ export const Register: React.FC = () => {
                                 placeholder="Create a strong password"
                             />
                         </div>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-sm font-bold text-slate-300 ml-1">Confirm Password</label>
+                            <input
+                                type="password"
+                                required
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className="w-full bg-background-dark border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-purple focus:ring-1 focus:ring-neon-purple transition-all placeholder:text-slate-600"
+                                placeholder="Confirm your password"
+                            />
+                        </div>
 
                         <div className="flex items-center gap-2 mt-1">
                             <input type="checkbox" required className="rounded bg-background-dark border-white/10 text-neon-purple focus:ring-offset-background-dark cursor-pointer" />
                             <label className="text-sm text-slate-400">
-                                I agree to the <a href="#" className="text-white hover:underline">Terms of Service</a> and <a href="#" className="text-white hover:underline">Privacy Policy</a>
+                                I agree to the <Link to="/terms" className="text-white hover:underline">Terms of Service</Link> and <Link to="/privacy" className="text-white hover:underline">Privacy Policy</Link>
                             </label>
                         </div>
 

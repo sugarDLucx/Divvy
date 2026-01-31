@@ -76,7 +76,7 @@ export const Login: React.FC = () => {
                                 <input type="checkbox" className="rounded bg-background-dark border-white/10 text-primary focus:ring-offset-background-dark" />
                                 Remember me
                             </label>
-                            <a href="#" className="text-primary hover:text-blue-400 font-medium transition-colors">Forgot password?</a>
+                            <Link to="/forgot-password" className="text-primary hover:text-blue-400 font-medium transition-colors">Forgot password?</Link>
                         </div>
 
                         <button

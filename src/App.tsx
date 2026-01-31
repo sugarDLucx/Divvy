@@ -7,6 +7,9 @@ import { Goals } from './pages/Goals';
 import { Transactions } from './pages/Transactions';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { ForgotPassword } from './pages/ForgotPassword';
+import { Terms } from './pages/Terms';
+import { Privacy } from './pages/Privacy';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -17,6 +20,9 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
 
           <Route path="/" element={
             <ProtectedRoute>
