@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Divvy Savings &amp; Goals</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#195de6",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                        "card-dark": "#1c1f26",
+                        "card-dark-hover": "#252932",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- Sidebar -->
+<div class="hidden md:flex w-64 flex-col border-r border-slate-800 bg-background-dark">
+<div class="flex flex-col h-full p-4">
+<!-- Brand -->
+<div class="flex items-center gap-3 px-2 mb-8 mt-2">
+<div class="bg-primary bg-opacity-20 flex items-center justify-center rounded-lg size-10">
+<span class="material-symbols-outlined text-primary" style="font-size: 24px;">savings</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-lg font-bold leading-tight">Divvy</h1>
+<p class="text-slate-400 text-xs font-normal">Financial Freedom</p>
+</div>
+</div>
+<!-- Navigation -->
+<div class="flex flex-col gap-2 flex-1">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-400 hover:bg-card-dark hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-400 hover:bg-card-dark hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">account_balance_wallet</span>
+<span class="text-sm font-medium">Income</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-400 hover:bg-card-dark hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">pie_chart</span>
+<span class="text-sm font-medium">Budget</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined fill-1">flag</span>
+<span class="text-sm font-bold">Goals</span>
+</a>
+</div>
+<!-- Bottom User Profile -->
+<div class="mt-auto border-t border-slate-800 pt-4 px-2">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 bg-slate-700" data-alt="User profile picture placeholder" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDyf6Kx76pj-A4NLW2UJhrWLxy3nH6To4-KUqIWxEvTPhfHQyhItFjqBXs_Y83DGtMtg7qllLNZz6m-gxjQnFXHlpeFd1VLMqmkeAmNhBznITZ4_dsMP4DxsIP7hbqZ7qs8OAUZrD1JhGijfcc_oWQ_s_rxjVWT-_n7gPVMCNks7GSRBD6TCqN35_joGo7cFQnjcKgtrWMB9dve7BT7YA2xSTD8vLaz7Aj1iihYCQhAlxYggQJ6EdhPu0ywVXTd5icCONNbxApQJk4");'></div>
+<div class="flex flex-col">
+<p class="text-white text-sm font-medium">Alex Morgan</p>
+<p class="text-slate-500 text-xs">Premium Member</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col h-full overflow-hidden bg-background-dark relative">
+<!-- Mobile Header (Hidden on Desktop) -->
+<div class="md:hidden flex items-center justify-between p-4 border-b border-slate-800 bg-background-dark">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">savings</span>
+<span class="font-bold text-white">Divvy</span>
+</div>
+<button class="text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+<main class="flex-1 overflow-y-auto p-4 md:p-8 lg:px-12 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+<div class="max-w-6xl mx-auto flex flex-col gap-8 pb-12">
+<!-- Page Heading -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="flex flex-col gap-2">
+<h2 class="text-white text-3xl md:text-4xl font-black tracking-tight">Savings &amp; Goals</h2>
+<p class="text-slate-400 text-base">Visualize your progress and manage your sinking funds.</p>
+</div>
+<button class="flex items-center gap-2 bg-card-dark hover:bg-card-dark-hover border border-slate-700 text-white px-4 py-2.5 rounded-lg transition-all shadow-lg active:scale-95 group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">add_circle</span>
+<span class="font-bold text-sm">Add New Goal</span>
+</button>
+</div>
+<!-- Stats Overview -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-card-dark p-5 rounded-xl border border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-5xl text-white">savings</span>
+</div>
+<p class="text-slate-400 text-sm font-medium mb-1">Total Saved</p>
+<div class="flex items-end gap-2">
+<p class="text-white text-3xl font-bold tracking-tight">$15,050</p>
+<span class="text-emerald-500 text-xs font-bold mb-1.5 bg-emerald-500/10 px-1.5 py-0.5 rounded flex items-center">
+<span class="material-symbols-outlined text-[12px] mr-0.5">trending_up</span> 12%
+                                </span>
+</div>
+</div>
+<div class="bg-card-dark p-5 rounded-xl border border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-5xl text-white">flag</span>
+</div>
+<p class="text-slate-400 text-sm font-medium mb-1">Total Goal Target</p>
+<p class="text-white text-3xl font-bold tracking-tight">$24,200</p>
+</div>
+<div class="bg-card-dark p-5 rounded-xl border border-slate-800 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-5xl text-white">donut_large</span>
+</div>
+<p class="text-slate-400 text-sm font-medium mb-1">Overall Completion</p>
+<div class="flex items-center gap-3">
+<p class="text-white text-3xl font-bold tracking-tight">62%</p>
+<div class="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden max-w-[100px]">
+<div class="h-full bg-primary rounded-full" style="width: 62%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Emergency Vat Section -->
+<div class="flex flex-col gap-4">
+<h3 class="text-white text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">health_and_safety</span>
+                            Emergency Vat
+                        </h3>
+<div class="bg-card-dark rounded-xl p-0 border border-slate-800 shadow-lg overflow-hidden flex flex-col md:flex-row">
+<!-- Visual Liquid Fill Side -->
+<div class="relative w-full md:w-1/3 min-h-[200px] bg-slate-800 group">
+<div class="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay" data-alt="Abstract blue liquid wave background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCcsXjqQFnD8EiYanfE2QmyF3ZwwYNww4c3VcyDvTuRygjN16kDggTXyBb67MU8c5iDEQJ_etNP_ouDo19Bqxyk2XDeZn6g9DjpSfm9Rlt0hW4ZisU7asnXTl9sqL664t8o7JVTgGtTXs0Y_TOODA9wf6VEUlS-UwLkZ8H7KKp3389QuylsBh1_UbSwYmXkbo7NmWozHsZdp0cFkNuxH7B1mlpslw4NlUgRuBkgfUskN6LrF4M5gMkl9bnGEPMsUFUUrxi9IUXEPbQ");'></div>
+<!-- The "Liquid" fill overlay -->
+<div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-primary/90 to-primary/40 transition-all duration-1000 ease-out" style="height: 83%;">
+<div class="w-full h-1 bg-white/20 absolute top-0 shadow-[0_0_15px_rgba(255,255,255,0.5)]"></div>
+</div>
+<div class="absolute inset-0 flex items-center justify-center z-10 flex-col">
+<span class="text-5xl font-black text-white drop-shadow-md">83%</span>
+<span class="text-white/80 text-sm font-medium tracking-wider uppercase mt-1">Funded</span>
+</div>
+</div>
+<!-- Content Side -->
+<div class="p-6 md:p-8 flex flex-col justify-center flex-1 gap-6">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-red-500/20 text-red-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider border border-red-500/20">High Priority</span>
+</div>
+<h4 class="text-2xl font-bold text-white mb-2">Emergency Safety Net</h4>
+<p class="text-slate-400 text-sm max-w-md">Your financial shield. Covers 3-6 months of essential expenses like rent, food, and utilities.</p>
+</div>
+<button class="hidden md:flex bg-primary hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium transition-colors items-center gap-2 shadow-[0_0_15px_rgba(25,93,230,0.3)]">
+<span class="material-symbols-outlined text-sm">add</span>
+                                        Add Funds
+                                    </button>
+</div>
+<div class="flex flex-wrap items-center gap-x-12 gap-y-6 border-t border-slate-800/50 pt-6">
+<div>
+<p class="text-slate-500 text-xs font-medium uppercase tracking-wider mb-1">Current Balance</p>
+<p class="text-white text-2xl font-bold font-mono">$12,450</p>
+</div>
+<div>
+<p class="text-slate-500 text-xs font-medium uppercase tracking-wider mb-1">Target Goal</p>
+<p class="text-slate-300 text-2xl font-bold font-mono">$15,000</p>
+</div>
+<div>
+<p class="text-slate-500 text-xs font-medium uppercase tracking-wider mb-1">Monthly Auto-Save</p>
+<p class="text-emerald-400 text-xl font-bold font-mono">+$500/mo</p>
+</div>
+</div>
+<button class="md:hidden w-full bg-primary hover:bg-blue-600 text-white px-5 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                                    Add Funds
+                                </button>
+</div>
+</div>
+</div>
+<!-- Sinking Funds Grid -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h3 class="text-white text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">water_drop</span>
+                                Sinking Funds
+                            </h3>
+<button class="text-primary text-sm font-medium hover:text-white transition-colors flex items-center gap-1">
+                                View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+<!-- Card 1 -->
+<div class="bg-card-dark rounded-xl p-5 border border-slate-800 shadow-sm hover:border-slate-600 transition-all group flex flex-col justify-between h-full">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="bg-slate-800 p-2.5 rounded-lg text-slate-300 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">laptop_mac</span>
+</div>
+<div class="relative size-12">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+<circle class="stroke-current text-slate-800" cx="18" cy="18" fill="none" r="16" stroke-width="3"></circle>
+<circle class="stroke-current text-primary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="100" stroke-dashoffset="30" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white">70%</div>
+</div>
+</div>
+<h4 class="text-white font-bold text-lg leading-tight mb-1">MacBook Pro</h4>
+<p class="text-slate-500 text-xs mb-4">Due Nov 2023</p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-sm">
+<span class="text-slate-400">Saved</span>
+<span class="text-white font-mono font-medium">$2,100</span>
+</div>
+<div class="w-full bg-slate-800 rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 70%"></div>
+</div>
+<div class="flex justify-between text-xs pt-2 border-t border-slate-800">
+<span class="text-slate-500">Contribution</span>
+<span class="text-emerald-400 font-medium">+$300/mo</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-card-dark rounded-xl p-5 border border-slate-800 shadow-sm hover:border-slate-600 transition-all group flex flex-col justify-between h-full">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="bg-slate-800 p-2.5 rounded-lg text-slate-300 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">flight</span>
+</div>
+<div class="relative size-12">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+<circle class="stroke-current text-slate-800" cx="18" cy="18" fill="none" r="16" stroke-width="3"></circle>
+<circle class="stroke-current text-primary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="100" stroke-dashoffset="90" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white">10%</div>
+</div>
+</div>
+<h4 class="text-white font-bold text-lg leading-tight mb-1">Japan Trip</h4>
+<p class="text-slate-500 text-xs mb-4">Due June 2024</p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-sm">
+<span class="text-slate-400">Saved</span>
+<span class="text-white font-mono font-medium">$500</span>
+</div>
+<div class="w-full bg-slate-800 rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 10%"></div>
+</div>
+<div class="flex justify-between text-xs pt-2 border-t border-slate-800">
+<span class="text-slate-500">Contribution</span>
+<span class="text-emerald-400 font-medium">+$450/mo</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-card-dark rounded-xl p-5 border border-slate-800 shadow-sm hover:border-slate-600 transition-all group flex flex-col justify-between h-full">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="bg-slate-800 p-2.5 rounded-lg text-slate-300 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">directions_car</span>
+</div>
+<div class="relative size-12">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+<circle class="stroke-current text-slate-800" cx="18" cy="18" fill="none" r="16" stroke-width="3"></circle>
+<circle class="stroke-current text-orange-500" cx="18" cy="18" fill="none" r="16" stroke-dasharray="100" stroke-dashoffset="83" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white">17%</div>
+</div>
+</div>
+<h4 class="text-white font-bold text-lg leading-tight mb-1">Car Insurance</h4>
+<p class="text-slate-500 text-xs mb-4">Due Dec 2023</p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-sm">
+<span class="text-slate-400">Saved</span>
+<span class="text-white font-mono font-medium">$200</span>
+</div>
+<div class="w-full bg-slate-800 rounded-full h-1.5">
+<div class="bg-orange-500 h-1.5 rounded-full" style="width: 17%"></div>
+</div>
+<div class="flex justify-between text-xs pt-2 border-t border-slate-800">
+<span class="text-slate-500">Contribution</span>
+<span class="text-emerald-400 font-medium">+$166/mo</span>
+</div>
+</div>
+</div>
+<!-- Add New Placeholder -->
+<button class="rounded-xl border-2 border-dashed border-slate-700 hover:border-primary hover:bg-card-dark/50 transition-all p-5 flex flex-col items-center justify-center gap-3 text-slate-500 hover:text-white group h-full min-h-[220px]">
+<div class="size-12 rounded-full bg-slate-800 group-hover:bg-primary/20 flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">add</span>
+</div>
+<span class="font-medium text-sm">Create New Goal</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

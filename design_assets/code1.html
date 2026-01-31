@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Divvy Budgeting Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#195de6",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#0B0E14", // Deep dark background
+                        "glass": "rgba(30, 41, 59, 0.4)", // Glass base
+                        "glass-border": "rgba(255, 255, 255, 0.08)",
+                        "accent-teal": "#2dd4bf",
+                        "accent-purple": "#a855f7",
+                        "status-green": "#10b981",
+                        "status-yellow": "#f59e0b",
+                        "status-red": "#ef4444",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                    backdropBlur: {
+                        xs: '2px',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563; 
+        }
+        
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display min-h-screen flex flex-col antialiased selection:bg-primary selection:text-white overflow-x-hidden">
+<!-- Navbar -->
+<header class="sticky top-0 z-50 glass-panel w-full">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<!-- Logo -->
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg bg-gradient-to-br from-primary to-accent-purple flex items-center justify-center text-white shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+</div>
+<span class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">Divvy</span>
+</div>
+<!-- Nav Links -->
+<nav class="hidden md:flex items-center gap-1">
+<a class="px-4 py-2 text-sm font-medium text-white bg-white/10 rounded-full border border-white/5 transition-colors" href="#">Dashboard</a>
+<a class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors" href="#">Transactions</a>
+<a class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors" href="#">Reports</a>
+<a class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors" href="#">Settings</a>
+</nav>
+<!-- Profile -->
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-400 hover:text-white transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-accent-teal rounded-full"></span>
+</button>
+<div class="size-9 rounded-full bg-cover bg-center border border-white/10 ring-2 ring-white/5 cursor-pointer" data-alt="User profile avatar showing a smiling person" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuARQG054s-njI4VBSHaKyFXbEVer0X4WPvISBkq2f7CuzZkf5urTVj0T9gbPKYvthw_mWCBdogPAPNiN_VizDUjBmwHBVWqkL11sSn5THNtavzW8TQjT0g0KG7MHeviQxwUjAajUxXk20oeouEH-jLaidqXm49CBM3dEtfM48hQ0iWDcWZb34yYQ40AgUNoJP3g-oHARMauzRXwgq7nEs3p5fbgHhv2CyU0vJOQZCZFAL2jwfyf9tO08lkz66Uo6Gf684x0X3bQvHY");'>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-1">
+<div class="flex items-center gap-2 text-accent-teal text-sm font-semibold uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm">savings</span>
+                    Zero-Based Budgeting
+                </div>
+<h1 class="text-4xl font-black tracking-tight text-white drop-shadow-sm">October 2023 Budget</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-medium transition-all group">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">chevron_left</span>
+                    Prev Month
+                </button>
+<div class="h-6 w-px bg-white/10"></div>
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-medium transition-all group">
+                    Next Month
+                    <span class="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors">chevron_right</span>
+</button>
+<button class="ml-2 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white text-sm font-bold shadow-lg shadow-primary/25 transition-all">
+<span class="material-symbols-outlined text-[18px]">edit_calendar</span>
+                    Edit Plan
+                </button>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Left to Budget (Hero) -->
+<div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[80px] text-accent-teal">account_balance</span>
+</div>
+<div class="relative z-10 flex flex-col h-full justify-between gap-4">
+<div class="flex items-center justify-between">
+<p class="text-slate-400 font-medium">Left to Budget</p>
+<span class="px-2 py-1 rounded text-xs font-bold bg-accent-teal/10 text-accent-teal">+0%</span>
+</div>
+<div>
+<p class="text-4xl font-bold text-white tracking-tight">$3,400.00</p>
+<p class="text-sm text-slate-500 mt-1">Every dollar has a job</p>
+</div>
+<div class="w-full bg-white/10 rounded-full h-1.5 mt-2">
+<div class="bg-accent-teal h-1.5 rounded-full" style="width: 40%"></div>
+</div>
+</div>
+</div>
+<!-- Total Income -->
+<div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[80px] text-primary">payments</span>
+</div>
+<div class="relative z-10 flex flex-col h-full justify-between gap-4">
+<div class="flex items-center justify-between">
+<p class="text-slate-400 font-medium">Total Income</p>
+<span class="px-2 py-1 rounded text-xs font-bold bg-primary/10 text-blue-400">Stable</span>
+</div>
+<div>
+<p class="text-4xl font-bold text-white tracking-tight">$8,500.00</p>
+<p class="text-sm text-slate-500 mt-1">From all sources</p>
+</div>
+<div class="w-full bg-white/10 rounded-full h-1.5 mt-2">
+<div class="bg-primary h-1.5 rounded-full" style="width: 100%"></div>
+</div>
+</div>
+</div>
+<!-- Assigned -->
+<div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[80px] text-accent-purple">pie_chart</span>
+</div>
+<div class="relative z-10 flex flex-col h-full justify-between gap-4">
+<div class="flex items-center justify-between">
+<p class="text-slate-400 font-medium">Assigned</p>
+<span class="px-2 py-1 rounded text-xs font-bold bg-accent-purple/10 text-accent-purple">Active</span>
+</div>
+<div>
+<p class="text-4xl font-bold text-white tracking-tight">$5,100.00</p>
+<p class="text-sm text-slate-500 mt-1">Allocated to categories</p>
+</div>
+<div class="w-full bg-white/10 rounded-full h-1.5 mt-2">
+<div class="bg-accent-purple h-1.5 rounded-full" style="width: 60%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content Area -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+<!-- Table Section (Left) -->
+<div class="lg:col-span-2 flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="text-lg font-bold text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">list_alt</span>
+                        Categories
+                    </h3>
+<button class="text-sm text-primary font-medium hover:text-primary/80 transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">add_circle</span>
+                        Add Category
+                    </button>
+</div>
+<div class="glass-card rounded-2xl overflow-hidden border border-white/10">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-white/5 border-b border-white/10 text-xs uppercase tracking-wider text-slate-400">
+<th class="px-6 py-4 font-semibold w-1/4">Category</th>
+<th class="px-6 py-4 font-semibold w-1/6">Type</th>
+<th class="px-6 py-4 font-semibold w-1/6 text-right">Planned</th>
+<th class="px-6 py-4 font-semibold w-1/6 text-right">Spent</th>
+<th class="px-6 py-4 font-semibold w-1/4">Utilization</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- Row 1: Rent (Need, Good) -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[20px]">home</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-white">Rent</p>
+<p class="text-xs text-slate-500">Due on 1st</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-blue-300 border border-primary/20 hover:bg-primary/20 transition-colors cursor-pointer">
+                                            Need
+                                        </button>
+</td>
+<td class="px-6 py-4 text-right">
+<input class="bg-transparent text-right text-sm font-medium text-slate-300 focus:text-white focus:outline-none focus:border-b focus:border-primary w-24 transition-colors p-0 border-b border-transparent" type="text" value="$2,000.00"/>
+</td>
+<td class="px-6 py-4 text-right text-sm font-medium text-slate-400">$2,000.00</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-400">100%</span>
+<span class="text-status-green font-medium">Paid</span>
+</div>
+<div class="w-full h-2 bg-slate-700/50 rounded-full overflow-hidden">
+<div class="h-full bg-status-green rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]" style="width: 100%"></div>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 2: Dining Out (Want, Warning) -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-accent-purple/10 text-accent-purple">
+<span class="material-symbols-outlined text-[20px]">restaurant</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-white">Dining Out</p>
+<p class="text-xs text-slate-500">Weekly</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-accent-purple/10 text-purple-300 border border-accent-purple/20 hover:bg-accent-purple/20 transition-colors cursor-pointer">
+                                            Want
+                                        </button>
+</td>
+<td class="px-6 py-4 text-right">
+<input class="bg-transparent text-right text-sm font-medium text-slate-300 focus:text-white focus:outline-none focus:border-b focus:border-primary w-24 transition-colors p-0 border-b border-transparent" type="text" value="$400.00"/>
+</td>
+<td class="px-6 py-4 text-right text-sm font-medium text-slate-400">$340.00</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-400">85%</span>
+<span class="text-status-yellow font-medium">Careful</span>
+</div>
+<div class="w-full h-2 bg-slate-700/50 rounded-full overflow-hidden">
+<div class="h-full bg-status-yellow rounded-full shadow-[0_0_10px_rgba(245,158,11,0.5)]" style="width: 85%"></div>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 3: Video Games (Want, Danger) -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-accent-purple/10 text-accent-purple">
+<span class="material-symbols-outlined text-[20px]">sports_esports</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-white">Video Games</p>
+<p class="text-xs text-slate-500">Steam Sale</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-accent-purple/10 text-purple-300 border border-accent-purple/20 hover:bg-accent-purple/20 transition-colors cursor-pointer">
+                                            Want
+                                        </button>
+</td>
+<td class="px-6 py-4 text-right">
+<input class="bg-transparent text-right text-sm font-medium text-slate-300 focus:text-white focus:outline-none focus:border-b focus:border-primary w-24 transition-colors p-0 border-b border-transparent" type="text" value="$60.00"/>
+</td>
+<td class="px-6 py-4 text-right text-sm font-medium text-slate-400">$66.00</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-400">110%</span>
+<span class="text-status-red font-medium">Over</span>
+</div>
+<div class="w-full h-2 bg-slate-700/50 rounded-full overflow-hidden">
+<div class="h-full bg-status-red rounded-full shadow-[0_0_10px_rgba(239,68,68,0.5)]" style="width: 100%"></div>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 4: Groceries (Need, Good) -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-white">Groceries</p>
+<p class="text-xs text-slate-500">Weekly</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-blue-300 border border-primary/20 hover:bg-primary/20 transition-colors cursor-pointer">
+                                            Need
+                                        </button>
+</td>
+<td class="px-6 py-4 text-right">
+<input class="bg-transparent text-right text-sm font-medium text-slate-300 focus:text-white focus:outline-none focus:border-b focus:border-primary w-24 transition-colors p-0 border-b border-transparent" type="text" value="$600.00"/>
+</td>
+<td class="px-6 py-4 text-right text-sm font-medium text-slate-400">$300.00</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-400">50%</span>
+<span class="text-status-green font-medium">On Track</span>
+</div>
+<div class="w-full h-2 bg-slate-700/50 rounded-full overflow-hidden">
+<div class="h-full bg-status-green rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]" style="width: 50%"></div>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 5: Emergency Fund (Need, Savings) -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-accent-teal/10 text-accent-teal">
+<span class="material-symbols-outlined text-[20px]">savings</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-white">Emergency Fund</p>
+<p class="text-xs text-slate-500">Goal: $10k</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-blue-300 border border-primary/20 hover:bg-primary/20 transition-colors cursor-pointer">
+                                            Need
+                                        </button>
+</td>
+<td class="px-6 py-4 text-right">
+<input class="bg-transparent text-right text-sm font-medium text-slate-300 focus:text-white focus:outline-none focus:border-b focus:border-primary w-24 transition-colors p-0 border-b border-transparent" type="text" value="$500.00"/>
+</td>
+<td class="px-6 py-4 text-right text-sm font-medium text-slate-400">$500.00</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-400">100%</span>
+<span class="text-accent-teal font-medium">Saved</span>
+</div>
+<div class="w-full h-2 bg-slate-700/50 rounded-full overflow-hidden">
+<div class="h-full bg-accent-teal rounded-full shadow-[0_0_10px_rgba(45,212,191,0.5)]" style="width: 100%"></div>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination / Footer of table -->
+<div class="px-6 py-4 bg-white/5 border-t border-white/5 flex justify-between items-center">
+<span class="text-xs text-slate-400">Showing 5 of 12 categories</span>
+<div class="flex gap-2">
+<button class="size-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Section (Right) -->
+<div class="lg:col-span-1 flex flex-col gap-6">
+<!-- Breakdown Chart -->
+<div class="glass-card rounded-2xl p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold text-white">Breakdown</h3>
+<button class="text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<!-- Visual Chart (CSS only bar chart) -->
+<div class="flex h-48 items-end gap-4 pb-4 border-b border-white/10">
+<div class="flex-1 flex flex-col justify-end gap-2 group cursor-pointer">
+<div class="w-full bg-primary/20 rounded-t-lg relative overflow-hidden transition-all h-[50%] group-hover:bg-primary/30">
+<div class="absolute bottom-0 w-full bg-primary h-full shadow-[0_0_15px_rgba(25,93,230,0.3)]"></div>
+</div>
+<p class="text-xs text-center font-medium text-slate-400">Needs</p>
+</div>
+<div class="flex-1 flex flex-col justify-end gap-2 group cursor-pointer">
+<div class="w-full bg-accent-purple/20 rounded-t-lg relative overflow-hidden transition-all h-[30%] group-hover:bg-accent-purple/30">
+<div class="absolute bottom-0 w-full bg-accent-purple h-full shadow-[0_0_15px_rgba(168,85,247,0.3)]"></div>
+</div>
+<p class="text-xs text-center font-medium text-slate-400">Wants</p>
+</div>
+<div class="flex-1 flex flex-col justify-end gap-2 group cursor-pointer">
+<div class="w-full bg-accent-teal/20 rounded-t-lg relative overflow-hidden transition-all h-[20%] group-hover:bg-accent-teal/30">
+<div class="absolute bottom-0 w-full bg-accent-teal h-full shadow-[0_0_15px_rgba(45,212,191,0.3)]"></div>
+</div>
+<p class="text-xs text-center font-medium text-slate-400">Savings</p>
+</div>
+</div>
+<!-- Legend / Details -->
+<div class="space-y-4 mt-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-3 rounded-full bg-primary shadow-[0_0_8px_rgba(25,93,230,0.5)]"></div>
+<p class="text-sm font-medium text-slate-300">Needs (50%)</p>
+</div>
+<p class="text-sm font-bold text-white">$2,550</p>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-3 rounded-full bg-accent-purple shadow-[0_0_8px_rgba(168,85,247,0.5)]"></div>
+<p class="text-sm font-medium text-slate-300">Wants (30%)</p>
+</div>
+<p class="text-sm font-bold text-white">$1,530</p>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-3 rounded-full bg-accent-teal shadow-[0_0_8px_rgba(45,212,191,0.5)]"></div>
+<p class="text-sm font-medium text-slate-300">Savings (20%)</p>
+</div>
+<p class="text-sm font-bold text-white">$1,020</p>
+</div>
+</div>
+</div>
+<!-- Insights Card -->
+<div class="glass-card rounded-2xl p-6 bg-gradient-to-br from-white/5 to-transparent">
+<div class="flex items-start gap-4">
+<div class="p-3 bg-accent-teal/10 rounded-xl text-accent-teal">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<div>
+<h4 class="text-white font-bold mb-1">Budget Insight</h4>
+<p class="text-sm text-slate-400 leading-relaxed">
+                                You have <span class="text-white font-semibold">$3,400</span> remaining to assign. Consider moving 20% to your "Emergency Fund" to hit your Q4 goal.
+                            </p>
+<button class="mt-4 text-xs font-bold text-accent-teal hover:text-white uppercase tracking-wider transition-colors">
+                                Apply Suggestion
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
