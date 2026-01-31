@@ -1,20 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { addBudgetCategory } from '../../services/db';
+import { addBudgetCategory, updateBudgetCategory } from '../../services/db';
 import type { BudgetCategory } from '../../types';
 
-interface AddBudgetModalProps {
+interface BudgetModalProps {
     onClose: () => void;
     onSuccess: () => void;
     currentMonth: string;
+    initialData?: BudgetCategory; // Optional prop for editing
 }
 
-export const AddBudgetModal: React.FC<AddBudgetModalProps> = ({ onClose, onSuccess, currentMonth }) => {
+export const BudgetModal: React.FC<BudgetModalProps> = ({ onClose, onSuccess, currentMonth, initialData }) => {
     const { user } = useAuth();
     const [name, setName] = useState('');
     const [amount, setAmount] = useState('');
     const [type, setType] = useState<'need' | 'want' | 'savings'>('need');
     const [submitting, setSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (initialData) {
+            setName(initialData.name);
+            setAmount(initialData.plannedAmount.toString());
+            setType(initialData.type);
+        }
+    }, [initialData]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -22,19 +31,28 @@ export const AddBudgetModal: React.FC<AddBudgetModalProps> = ({ onClose, onSucce
         setSubmitting(true);
 
         try {
-            const newBudget: Omit<BudgetCategory, 'id'> = {
-                name,
-                plannedAmount: parseFloat(amount),
-                spentAmount: 0,
-                type,
-                month: currentMonth,
-                userId: user.uid
-            };
-
-            await addBudgetCategory(newBudget);
+            if (initialData && initialData.id) {
+                // Edit Mode
+                await updateBudgetCategory(user.uid, initialData.id, {
+                    name,
+                    plannedAmount: parseFloat(amount),
+                    type
+                });
+            } else {
+                // Add Mode
+                const newBudget: Omit<BudgetCategory, 'id'> = {
+                    name,
+                    plannedAmount: parseFloat(amount),
+                    spentAmount: 0,
+                    type,
+                    month: currentMonth,
+                    userId: user.uid
+                };
+                await addBudgetCategory(newBudget);
+            }
             onSuccess();
         } catch (error) {
-            console.error("Error adding budget:", error);
+            console.error("Error saving budget:", error);
         } finally {
             setSubmitting(false);
         }
@@ -50,7 +68,9 @@ export const AddBudgetModal: React.FC<AddBudgetModalProps> = ({ onClose, onSucce
                     <span className="material-symbols-outlined">close</span>
                 </button>
 
-                <h3 className="text-xl font-bold text-white mb-6">New Budget Category</h3>
+                <h3 className="text-xl font-bold text-white mb-6">
+                    {initialData ? 'Edit Budget Category' : 'New Budget Category'}
+                </h3>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1.5">
@@ -118,7 +138,7 @@ export const AddBudgetModal: React.FC<AddBudgetModalProps> = ({ onClose, onSucce
                         disabled={submitting}
                         className="bg-primary hover:bg-blue-600 text-white py-2.5 rounded-lg font-bold text-sm transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 mt-2"
                     >
-                        {submitting ? 'Creating...' : 'Create Category'}
+                        {submitting ? 'Saving...' : (initialData ? 'Update Category' : 'Create Category')}
                     </button>
                 </form>
             </div>

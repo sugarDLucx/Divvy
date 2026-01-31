@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { AddBudgetModal } from '../components/modals/AddBudgetModal';
+import { BudgetModal } from '../components/modals/BudgetModal';
 import { useRealTimeData } from '../hooks/useRealTimeData';
 import { getUserProfile, deleteBudgetCategory } from '../services/db';
-import type { UserFinancialProfile } from '../types';
+import type { UserFinancialProfile, BudgetCategory } from '../types';
 
 export const Budget: React.FC = () => {
     const { user } = useAuth();
     const { budgets, loading: dataLoading } = useRealTimeData(user?.uid);
     const [profile, setProfile] = useState<UserFinancialProfile | null>(null);
-    const [showAddModal, setShowAddModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [editingBudget, setEditingBudget] = useState<BudgetCategory | undefined>(undefined);
+
+    const handleEdit = (budget: BudgetCategory) => {
+        setEditingBudget(budget);
+        setShowModal(true);
+    };
 
     const handleDelete = async (id: string) => {
         if (!user || !confirm('Are you sure you want to delete this budget category?')) return;
@@ -52,11 +58,12 @@ export const Budget: React.FC = () => {
 
     return (
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8 relative">
-            {showAddModal && (
-                <AddBudgetModal
+            {showModal && (
+                <BudgetModal
                     currentMonth={currentMonth}
-                    onClose={() => setShowAddModal(false)}
-                    onSuccess={() => setShowAddModal(false)}
+                    onClose={() => { setShowModal(false); setEditingBudget(undefined); }}
+                    onSuccess={() => { setShowModal(false); setEditingBudget(undefined); }}
+                    initialData={editingBudget}
                 />
             )}
 
@@ -134,7 +141,7 @@ export const Budget: React.FC = () => {
                     <h3 className="text-2xl font-bold text-white">No Budget Set</h3>
                     <p className="text-slate-400 max-w-md">You haven't added any budget categories for this month yet. Start by adding things like Rent, Groceries, or Savings.</p>
                     <button
-                        onClick={() => setShowAddModal(true)}
+                        onClick={() => setShowModal(true)}
                         className="bg-primary hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-bold transition-all"
                     >
                         Create First Category
@@ -145,7 +152,7 @@ export const Budget: React.FC = () => {
                 <div className="flex flex-col gap-6">
                     <div className="flex justify-end">
                         <button
-                            onClick={() => setShowAddModal(true)}
+                            onClick={() => setShowModal(true)}
                             className="flex items-center gap-2 bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-sm transition-all"
                         >
                             <span className="material-symbols-outlined text-[18px]">add</span>
@@ -215,12 +222,22 @@ export const Budget: React.FC = () => {
                                                     </div>
                                                 </td>
                                                 <td className="px-4 py-3 text-right">
-                                                    <button
-                                                        onClick={() => handleDelete(b.id!)}
-                                                        className="text-slate-500 hover:text-red-400 p-1 rounded hover:bg-white/5"
-                                                    >
-                                                        <span className="material-symbols-outlined text-[18px]">delete</span>
-                                                    </button>
+                                                    <div className="flex items-center justify-end gap-1">
+                                                        <button
+                                                            onClick={() => handleEdit(b)}
+                                                            className="text-slate-500 hover:text-white p-1 rounded hover:bg-white/5"
+                                                            title="Edit Budget"
+                                                        >
+                                                            <span className="material-symbols-outlined text-[18px]">edit</span>
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(b.id!)}
+                                                            className="text-slate-500 hover:text-red-400 p-1 rounded hover:bg-white/5"
+                                                            title="Delete Budget"
+                                                        >
+                                                            <span className="material-symbols-outlined text-[18px]">delete</span>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         );

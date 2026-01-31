@@ -214,6 +214,11 @@ export const deleteBudgetCategory = async (userId: string, budgetId: string) => 
     await deleteDoc(ref);
 };
 
+export const updateBudgetCategory = async (userId: string, budgetId: string, updates: Partial<BudgetCategory>) => {
+    const ref = doc(db, `users/${userId}/categories`, budgetId);
+    await updateDoc(ref, updates);
+};
+
 // ============================================
 // Savings Goals
 // ============================================
