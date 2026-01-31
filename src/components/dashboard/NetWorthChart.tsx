@@ -36,7 +36,7 @@ export const NetWorthChart: React.FC = () => {
                 {/* Tooltip for Data Point */}
                 <g transform="translate(470, 60)">
                     <rect fill="#1c2230" height="28" rx="6" stroke="#2dd4bf" strokeWidth="1" width="60"></rect>
-                    <text fill="white" fontSize="12" fontWeight="bold" textAnchor="middle" x="30" y="19">$98k</text>
+                    <text fill="white" fontSize="12" fontWeight="bold" textAnchor="middle" x="30" y="19">₱98k</text>
                 </g>
             </svg>
         </div>

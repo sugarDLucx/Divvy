@@ -35,10 +35,22 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
         }
     }, [user, authLoading, location.pathname]); // Re-check on nav? mostly relevant on mount and auth change.
 
+    // Timeout fallback to prevent infinite loading (e.g. if firestore hangs)
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (profileLoading) {
+                console.warn("Profile check timed out, proceeding...");
+                setProfileLoading(false);
+            }
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, [profileLoading]);
+
     if (authLoading || (user && profileLoading)) {
         return (
-            <div className="h-screen w-full flex items-center justify-center" style={{ backgroundColor: '#0b0e14' }}>
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <div className="h-screen w-full flex flex-col gap-4 items-center justify-center bg-[#0b0e14] text-white">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+                <p className="text-sm font-medium animate-pulse text-slate-400">Loading your finances...</p>
             </div>
         );
     }

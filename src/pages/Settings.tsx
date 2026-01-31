@@ -50,8 +50,9 @@ export const Settings: React.FC = () => {
         try {
             await createUserProfile(user.uid, {
                 totalNetWorth: parseFloat(netWorth) || 0,
+                initialNetWorth: parseFloat(netWorth) || 0,
                 monthlyIncome: income,
-                currency: 'USD',
+                currency: 'PHP',
                 onboardingCompleted: true
             });
             setSuccessMsg('Profile updated successfully!');
@@ -96,7 +97,7 @@ export const Settings: React.FC = () => {
                         <label className="text-sm font-bold text-slate-300">Total Net Worth</label>
                         <p className="text-xs text-slate-500">Your starting balance across all accounts.</p>
                         <div className="relative">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">$</span>
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">₱</span>
                             <input
                                 type="number"
                                 required
@@ -113,7 +114,7 @@ export const Settings: React.FC = () => {
                         <label className="text-sm font-bold text-slate-300">Monthly Income</label>
                         <p className="text-xs text-slate-500">Used for monthly budget calculations.</p>
                         <div className="relative">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">$</span>
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">₱</span>
                             <input
                                 type="number"
                                 required
