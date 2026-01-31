@@ -42,7 +42,7 @@ export const Register: React.FC = () => {
             });
 
             // 4. Redirect
-            navigate('/settings');
+            navigate('/');
         } catch (err: any) {
             setError(err.message || 'Failed to create account.');
             console.error(err);

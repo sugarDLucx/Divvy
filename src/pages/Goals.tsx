@@ -136,8 +136,8 @@ export const Goals: React.FC = () => {
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/10 transition-colors"></div>
 
                                 <div className="flex justify-between items-start z-10">
-                                    <div className="size-12 rounded-xl bg-surface-dark border border-white/10 flex items-center justify-center text-2xl shadow-inner">
-                                        {goal.icon ? <span className="material-symbols-outlined">{goal.icon}</span> : '🎯'}
+                                    <div className="size-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/20 flex items-center justify-center text-2xl shadow-inner text-white group-hover:scale-110 transition-transform">
+                                        {goal.icon ? <span className="material-symbols-outlined drop-shadow-sm">{goal.icon}</span> : '🎯'}
                                     </div>
                                     <button
                                         onClick={() => setContributionGoal(goal)}

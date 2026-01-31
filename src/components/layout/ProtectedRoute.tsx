@@ -60,9 +60,10 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
     }
 
     // specific check: if not onboarding completed, force to settings
-    if (!onboardingCompleted && location.pathname !== '/settings') {
-        return <Navigate to="/settings" replace />;
-    }
+    // REMOVED: We now handle onboarding via Modal on Dashboard
+    // if (!onboardingCompleted && location.pathname !== '/settings') {
+    //     return <Navigate to="/settings" replace />;
+    // }
 
     return <>{children}</>;
 };
