@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { NetWorthChart } from '../components/dashboard/NetWorthChart';
 import { useAuth } from '../context/AuthContext';
 import { checkAndGenerateRecurringTransactions, getUserProfile, addTransactionWithBatch } from '../services/db';
@@ -9,6 +10,7 @@ import { useRealTimeData } from '../hooks/useRealTimeData';
 
 export const Dashboard: React.FC = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const { transactions, stats, budgets, goals } = useRealTimeData(user?.uid);
     const [profile, setProfile] = useState<UserFinancialProfile | null>(null);
     const [showOnboarding, setShowOnboarding] = useState(false);
@@ -220,7 +222,12 @@ export const Dashboard: React.FC = () => {
                         )}
                         {budgets.length > 4 && (
                             <div className="text-center mt-2">
-                                <span className="text-xs text-primary cursor-pointer hover:underline">View All Budgets</span>
+                                <span
+                                    onClick={() => navigate('/budget')}
+                                    className="text-xs text-primary cursor-pointer hover:underline"
+                                >
+                                    View All Budgets
+                                </span>
                             </div>
                         )}
                     </div>
