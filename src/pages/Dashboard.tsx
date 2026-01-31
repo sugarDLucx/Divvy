@@ -30,36 +30,50 @@ export const Dashboard: React.FC = () => {
         }
     }, [showSalaryModal, profile]);
 
+    const [submittingSalary, setSubmittingSalary] = useState(false);
+
     const handleAddSalary = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!user || !salaryAmount) return;
+        console.log("Add Salary Clicked", { userUid: user?.uid, salaryAmount });
+
+        if (!user) {
+            console.error("No user found");
+            return;
+        }
+        if (!salaryAmount) {
+            alert("Please enter an amount.");
+            return;
+        }
 
         const amount = parseFloat(salaryAmount);
-        if (isNaN(amount) || amount <= 0) return;
+        if (isNaN(amount) || amount === 0) {
+            alert("Please enter a valid non-zero amount.");
+            return;
+        }
 
+        setSubmittingSalary(true);
         try {
+            console.log("Submitting transaction...");
             await addTransactionWithBatch({
                 amount: amount,
                 category: 'Salary',
                 date: new Date().toISOString().split('T')[0],
-                description: 'Monthly Salary',
+                description: amount < 0 ? 'Salary Correction/Deduction' : 'Monthly Salary',
                 type: 'income',
-                userId: user.uid,
-                needsVsWants: undefined // Income doesn't track needs/wants usually.
+                userId: user.uid
+                // needsVsWants is optional, so we can omit it. explicitly passing undefined causes Firestore error.
             });
-            // Note: addTransactionWithBatch now updates profile.totalNetWorth automatically.
+            console.log("Transaction submitted.");
 
-            // For immediate UI update (since profile might take a moment to sync if we don't listen to it via snapshot),
-            // we rely on the fact that 'profile' is state.
-            // But we only fetch profile ONCE on load in useEffect.
-            // To see the "Estimated Net Worth" update instantly, we should ideally re-fetch profile or update local state.
-            // Let's re-fetch profile.
             loadProfile();
 
             setShowSalaryModal(false);
             setSalaryAmount('');
         } catch (error) {
             console.error("Failed to add salary", error);
+            alert("Failed to add salary. Please try again.");
+        } finally {
+            setSubmittingSalary(false);
         }
     };
 
@@ -155,7 +169,10 @@ export const Dashboard: React.FC = () => {
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
                         <div className="glass-panel p-6 rounded-2xl w-full max-w-sm border border-white/10 animate-fade-in-up">
                             <h3 className="text-xl font-bold text-white mb-2">Receive Salary</h3>
-                            <p className="text-slate-400 mb-6 text-sm">Confirm the amount to add to your income.</p>
+                            <p className="text-slate-400 mb-6 text-sm">
+                                Enter amount to add to your income. <br />
+                                <span className="text-xs text-orange-400 opacity-80">Tip: Use a negative value (e.g. -500) for deductions/corrections.</span>
+                            </p>
                             <form onSubmit={handleAddSalary} className="flex flex-col gap-4">
                                 <div className="relative">
                                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">₱</span>
@@ -163,7 +180,7 @@ export const Dashboard: React.FC = () => {
                                         type="number"
                                         step="0.01"
                                         autoFocus
-                                        className="w-full bg-surface-dark border border-white/10 rounded-xl py-3 pl-8 pr-4 text-white focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500/50 transition-all font-bold text-lg"
+                                        className="w-full bg-surface-dark border border-white/10 rounded-xl py-3 pl-8 pr-4 text-white focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500/50 transition-all font-bold text-lg placeholder:text-slate-600"
                                         value={salaryAmount}
                                         onChange={(e) => setSalaryAmount(e.target.value)}
                                         placeholder="0.00"
@@ -173,15 +190,21 @@ export const Dashboard: React.FC = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowSalaryModal(false)}
-                                        className="flex-1 px-4 py-2 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                                        disabled={submittingSalary}
+                                        className="flex-1 px-4 py-2 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold transition-all shadow-lg shadow-green-500/20"
+                                        disabled={submittingSalary}
+                                        className="flex-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold transition-all shadow-lg shadow-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center"
                                     >
-                                        Confirm
+                                        {submittingSalary ? (
+                                            <span className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                        ) : (
+                                            'Confirm'
+                                        )}
                                     </button>
                                 </div>
                             </form>
