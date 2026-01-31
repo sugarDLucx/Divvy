@@ -7,7 +7,7 @@ import type { UserFinancialProfile } from '../types';
 
 export const Budget: React.FC = () => {
     const { user } = useAuth();
-    const { budgets, stats, loading: dataLoading } = useRealTimeData(user?.uid);
+    const { budgets, loading: dataLoading } = useRealTimeData(user?.uid);
     const [profile, setProfile] = useState<UserFinancialProfile | null>(null);
     const [showAddModal, setShowAddModal] = useState(false);
 

@@ -12,8 +12,7 @@ import {
     writeBatch,
     increment,
     getDoc,
-    limit,
-    serverTimestamp
+    limit
 } from 'firebase/firestore';
 import { db } from '../lib/firebase'; // Assuming this exports the initialized firestore instance
 import type {
@@ -21,8 +20,7 @@ import type {
     BudgetCategory,
     SavingsGoal,
     UserFinancialProfile,
-    RecurringTemplate,
-    UserStats
+    RecurringTemplate
 } from '../types';
 
 // ============================================

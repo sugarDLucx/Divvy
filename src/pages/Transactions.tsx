@@ -6,7 +6,7 @@ import { useRealTimeData } from '../hooks/useRealTimeData';
 
 export const Transactions: React.FC = () => {
     const { user } = useAuth();
-    const { transactions, loading, budgets, stats } = useRealTimeData(user?.uid);
+    const { transactions, budgets, loading } = useRealTimeData(user?.uid);
     const [isAdding, setIsAdding] = useState(false);
 
     // Form State
