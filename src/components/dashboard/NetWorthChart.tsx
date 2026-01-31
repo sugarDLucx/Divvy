@@ -70,7 +70,7 @@ export const NetWorthChart: React.FC<NetWorthChartProps> = ({ transactions, curr
                     <Tooltip
                         contentStyle={{ backgroundColor: '#1c1f26', borderRadius: '8px', border: 'none' }}
                         itemStyle={{ color: '#2dd4bf' }}
-                        formatter={(val: number) => [`₱${val.toLocaleString()}`, 'Net Worth']}
+                        formatter={(val: number | undefined) => [val != null ? `₱${val.toLocaleString()}` : '', 'Net Worth']}
                         labelStyle={{ display: 'none' }}
                     />
                     <Area

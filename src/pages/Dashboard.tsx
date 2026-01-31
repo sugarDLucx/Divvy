@@ -9,10 +9,9 @@ import { useRealTimeData } from '../hooks/useRealTimeData';
 
 export const Dashboard: React.FC = () => {
     const { user } = useAuth();
-    const { transactions, stats, budgets, goals, loading: dataLoading } = useRealTimeData(user?.uid);
+    const { transactions, stats, budgets, goals } = useRealTimeData(user?.uid);
     const [profile, setProfile] = useState<UserFinancialProfile | null>(null);
     const [showOnboarding, setShowOnboarding] = useState(false);
-    const [initializing, setInitializing] = useState(true);
     const [showSalaryModal, setShowSalaryModal] = useState(false);
     const [showNetWorthModal, setShowNetWorthModal] = useState(false);
     const [salaryAmount, setSalaryAmount] = useState('');
@@ -97,7 +96,7 @@ export const Dashboard: React.FC = () => {
         } catch (error) {
             console.error("Failed to load profile", error);
         } finally {
-            setInitializing(false);
+            // Loading done
         }
     };
 

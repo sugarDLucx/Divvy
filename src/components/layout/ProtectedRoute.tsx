@@ -7,21 +7,14 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
     const { user, loading: authLoading } = useAuth();
     const location = useLocation();
     const [profileLoading, setProfileLoading] = useState(true);
-    const [onboardingCompleted, setOnboardingCompleted] = useState(false);
 
     useEffect(() => {
         const checkProfile = async () => {
             if (user) {
                 try {
-                    const profile = await getUserProfile(user.uid);
-                    if (profile && profile.onboardingCompleted) {
-                        setOnboardingCompleted(true);
-                    } else {
-                        setOnboardingCompleted(false);
-                    }
+                    await getUserProfile(user.uid);
                 } catch (e) {
                     console.error("Error fetching profile in protected route", e);
-                    setOnboardingCompleted(false);
                 } finally {
                     setProfileLoading(false);
                 }

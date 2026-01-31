@@ -131,7 +131,7 @@ export const NetWorthModal: React.FC<NetWorthModalProps> = ({ isOpen, onClose, t
                                         color: '#fff'
                                     }}
                                     itemStyle={{ color: '#2dd4bf' }}
-                                    formatter={(value: number) => [`₱${value.toLocaleString()}`, 'Net Worth']}
+                                    formatter={(value: number | undefined) => [value != null ? `₱${value.toLocaleString()}` : '', 'Net Worth']}
                                 />
                                 <Area
                                     type="monotone"
